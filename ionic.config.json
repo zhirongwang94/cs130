@@ -1,0 +1,7 @@
+{
+  "name": "covidAway",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
