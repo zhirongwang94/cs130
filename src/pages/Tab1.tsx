@@ -1,144 +1,150 @@
-import React,  { Component, useState  } from 'react';
+import React,  { Component,useState } from 'react';
 import GoogleMapReact from 'google-map-react';
-import './map.css'
-
-import { IonContent, 
-  IonHeader, 
-  IonPage, 
-  IonTitle, 
-  IonToolbar,
-  IonButton} from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-import './Tab1.css';
-import {useHistory} from 'react-router-dom'
-import {useForm} from 'react-hook-form'
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
-import {  IonLoading, IonToast } from '@ionic/react';
-//import { AutoComplete } from 'antd';
-//import  GooglePlacesAutocomplete  from 'react-places-autocomplete';
-//import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-/**
-This page should contain:
-  -options to take you to other pages:
-    -a symptoms checklist 
-    -testing sites near you
-    -health policies in your area
-**/
-interface LocationError {
-  showError: boolean;
-  message?: string;
+import { AnyCnameRecord } from 'dns';
+import {
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonInput,
+    IonButton,
+    IonPage
+  } from "@ionic/react";
+interface MyProps {
+
 }
 
-const Tab1: React.FC = () => {
-  const history = useHistory()
-  const {register, handleSubmit} = useForm<any>();
-  const onSubmit = ()=> {
-    history.push('/Symptoms')
-  };
+interface MyState {
+    mapsLoaded: boolean,     
+    //position :any,
+    latitude:number,
+    longitude:number,
+    map: {},
+    mapsApi: {},
+    searchResults: [],
+    placesService: {},
+    geoCoderService: {},
+    directionService: {},
+}
 
-  const onSubmit2 = ()=> {
-    history.push('/TestingSite')
-  };
+class Tab1 extends Component <MyProps,MyState> {
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            mapsLoaded: false,     
+            latitude:37.4,
+            longitude:-122,
+            map: {},
+            mapsApi: {},
+            searchResults: [],
+            placesService: {},
+            geoCoderService: {},
+            directionService: {},
+        };
+    }
+    apiHasLoaded = (map:any, mapsApi:any) => {
+      this.setState({
+        mapsLoaded: true,
+        map: map,
+        mapsApi: mapsApi,
+        placesService: new mapsApi.places.PlacesService(map),
+        geoCoderService: new mapsApi.Geocoder(),
+        directionService: new mapsApi.DirectionsService(),
+      });
+      console.log(this.state.mapsApi);
+      console.log(this.state.map);
+      
+        //var {placesService, directionService } = this.state;
+        let markerLatLng = new mapsApi.LatLng(this.state.latitude, this.state.latitude);
+        let placesRequest = {
+              location: markerLatLng,
+              //radius: '3000000', // Cannot be used with rankBy. Pick your poison!
+              type: ['hospital', 'pharmacy','doctor'], // List of types: https://developers.google.com/places/supported_types
+              query: 'covid 19 testing site',
+              rankBy: mapsApi.places.RankBy.DISTANCE,
+          }
+          console.log(placesRequest);
+          new mapsApi.places.PlacesService(map).textSearch(placesRequest, ((response:any) => {
+              console.log(response.length)
+              let responseLimit = Math.min(5, response.length);
+              for (let i = 0; i < responseLimit; i++) {
+                  const covidTesting = response[i];
+                  const { rating, name } = covidTesting;
+                  const address = covidTesting.formatted_address; 
+                  let openNow = false;
+                  if (covidTesting.opening_hours) {
+                      openNow = covidTesting.opening_hours.open_now; // e.g true/false
+                  }
+                  console.log(name,address, openNow);
+              }
+              
+          }
+          ))
 
-
-  const location = {
-  address: '1600 Amphitheatre Parkway, Mountain View, california.',
-  lat: 37.42216,
-  lng: -122.08427,
-  }
-  
-  const zoomLevel = 10; 
-  const myKEY = "AIzaSyBj9b-EHxuAAihd8u2HBBqWOSXukFlA3jY"
-  
-
-  const myObject = 123; 
-  
-  //const { autoCompleteService, singaporeLatLng } = this.state;
-  //const placesRequest = {
-  //    location: new mapsApi.LatLng(1.3521, 103.8198),
-  //    type: ['restaurant', 'cafe'],
-  //    query: 'covid 19 testing site',
-  //    rankBy: mapsApi.places.RankBy.DISTANCE,
-      // radius: 30000, 
-  //  };
-  const { SearchBox } = require("react-google-maps/lib/components/places/SearchBox");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<LocationError>({ showError: false });
-  const [position, setPosition] = useState<Geoposition>();
-  
-  const getLocation = async () => {
-      setLoading(true);
-
-      try {
-          const position = await Geolocation.getCurrentPosition();
-          setPosition(position);
-          setLoading(false);
-          setError({ showError: false });
+     
+    };
+    
+    handleClick = () => {
+      this.componentDidMount();
+      console.log("set longitude:",this.state.longitude);
+    }
+    async componentDidMount() {
+          await navigator.geolocation.getCurrentPosition(
+              position => this.setState({ 
+                  latitude: position.coords.latitude, 
+                  longitude: position.coords.longitude
+              })
           
-
-      } catch (e) {
-          setError({ showError: true, message: e.message });
-          setLoading(false);
+          )
       }
-  }
-
-  return (
-    <IonPage>
-
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Location Based COVID-19 Information</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-
-      <IonContent>
-
       
 
-        <form onSubmit = {handleSubmit(onSubmit)}>
-          <IonButton type="submit">Symptoms Checklist</IonButton>
-        </form>
-
-
-        <form onSubmit = {handleSubmit(onSubmit2)}>
-          <IonButton type="submit">Find Available Testing Site</IonButton>
-        </form>
-
-        <div>Current Location: {JSON.stringify(location.lat)} ,  {JSON.stringify(location.lng)}</div>
-        <>
-            <IonLoading
-                isOpen={loading}
-                onDidDismiss={() => setLoading(false)}
-                message={'Getting Location...'}
-            />
-            <IonToast
-                isOpen={error.showError}
-                onDidDismiss={() => setError({ message: "", showError: false })}
-                message={error.message}
-                duration={3000}
-            />
-            <IonButton color="primary" onClick={getLocation}>{position ? `${position.coords.latitude} ${position.coords.longitude}` : "Get Location"}</IonButton>
-        </>
-        <div className="google-map">
-       
+      //<IonButton color="primary" onClick={this.getLocation}>{this.state.longitude ? `${this.state.latitude} ${this.state.longitude}` : "Get Location"}</IonButton>
+      render(){
+        //const { constraints, mapsLoaded, singaporeLatLng, markers, searchResults } = this.state;
+        const {  geoCoderService } = this.state; // Google Maps Services
+      return(
+              <IonPage>
+              <IonHeader>
+                <IonToolbar color="primary">
+                  <IonTitle>Login</IonTitle>
+                </IonToolbar>
+              </IonHeader>
+              <div>            
+            <IonButton color="primary" onClick={this.handleClick}>
+              {"Update my locations"} 
+            </IonButton> 
+          </div>
+              <IonContent>
+              <div>Current Location: {JSON.stringify(this.state.latitude  )} ,  {JSON.stringify(this.state.latitude )}</div> 
+              <div>Initial Location: {JSON.stringify(this.state.latitude )} ,  {JSON.stringify(this.state.longitude)}</div> 
+              <div className="google-map">
             <GoogleMapReact
-              bootstrapURLKeys={{ key: myKEY,
+              bootstrapURLKeys={{
+                key: "AIzaSyBj9b-EHxuAAihd8u2HBBqWOSXukFlA3jY",
                 libraries: ['places', 'directions']
-               }}
-              defaultCenter={location}
-              defaultZoom={zoomLevel}
+              }}
+              defaultZoom={11}
+              defaultCenter={{ lat: this.state.latitude, lng: this.state.longitude }}
+              //yesIWantToUseGoogleMapApiInternals={true}
+              yesIWantToUseGoogleMapApiInternals
+              onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)} // "maps" is the mapApi. Bad naming but that's their library.
             >
-            </GoogleMapReact>
-        </div>
-
-
-
-      </IonContent>
-
-
-
-    </IonPage>
-  );
-};
-
-export default Tab1;
+  
+               </GoogleMapReact>
+               </div>
+                </IonContent>
+                </IonPage>
+            );
+      }
+    
+  };
+  
+  
+  
+  
+  export default Tab1;
