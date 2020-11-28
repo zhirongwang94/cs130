@@ -3,24 +3,19 @@ import React from 'react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Route, useHistory} from 'react-router-dom'; //
 
+
 import Singleton from './ContactTracing';
-import { Contact } from "@capacitor-community/contacts";
-import { Plugins } from "@capacitor/core";
-const  { Contacts } = Plugins;
+
+// import { Contact } from "@capacitor-community/contacts";
+// import { Plugins } from "@capacitor/core";
+// const  { Contacts } = Plugins;
 
 
 
 const ct = Singleton.getInstance();
 
 const displayContacts:React.FC = () => {
-    //const contactIndex:boolean[] = [];
     const contact_list = ct.getContacts();
-    // const history = useHistory()
-    // const onPush = () => { // 
-    //     ct.sendMessage();
-    //     history.goBack();
-    // };
-  
 
     return(
         <IonPage>
@@ -51,7 +46,7 @@ const displayContacts:React.FC = () => {
             </IonContent>
             <IonFooter>
 
-                <IonButton onClick={()=>ct.sendMessage()} expand="block" shape="round"  color="dark" fill="solid"> 
+                <IonButton onClick={()=>ct.share()} expand="block" shape="round"  color="dark" fill="solid"> 
                     {/*Where to write message?*/}
                     {/* <IonReactRouter>
                         <IonRouterOutlet>
@@ -59,8 +54,6 @@ const displayContacts:React.FC = () => {
                         </IonRouterOutlet>
                     </IonReactRouter> */}
                     Select and Send
-                    
-
                 </IonButton>
             </IonFooter>
         </IonPage>

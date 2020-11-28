@@ -7,27 +7,18 @@ import ExploreContainer from '../components/ExploreContainer';
 import './Tab3.css';
 import { scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 import { isConstructorDeclaration } from 'typescript';
-import {useHistory, Route} from 'react-router-dom'; //
-import displayContacts from './displayContacts';
-import { IonReactRouter } from '@ionic/react-router';
+//import {useHistory, Route} from 'react-router-dom'; //
+//import displayContacts from './displayContacts';
+//import { IonReactRouter } from '@ionic/react-router';
 //import { IonReactRouter } from '@ionic/react-router';
 
 
-// > Implement SMS sending 
-// > Selected contact works (not tested)
-// > Redirect back to tab 3?
+
 
 
 const ct = Singleton.getInstance();
 
 const Tab3: React.FC = () => {
-  // const [checked, setChecked] = useState(false);
-  // const [showAlert1, setShowAlert1] = useState(false);
-  //var c:ContactTracing = ContactTracing.getInstance();
-  // const history = useHistory()
-  // const onPush = () => { //
-  //   history.push('/displayContacts')
-  // };
 
   return (
     <IonPage>
@@ -65,12 +56,12 @@ const Tab3: React.FC = () => {
       </IonContent>
 
       <IonFooter>
-        <IonButton href='displayContacts' expand="block" shape="round"  color="dark" fill="solid">
-          <IonReactRouter>
+        <IonButton onClick={()=>ct.share()} expand="block" shape="round"  color="dark" fill="solid">
+          {/* <IonReactRouter>
             <IonRouterOutlet>
               <Route path={"/displayContacts"} component={displayContacts} exact={true}/> 
             </IonRouterOutlet>
-          </IonReactRouter>
+          </IonReactRouter> */}
           Send Message
         </IonButton>
       </IonFooter>
