@@ -1,5 +1,7 @@
 from abc import ABCMeta, abstractmethod
-from pip._vendor import requests
+import requests
+from flask import Flask, Response, request, abort, jsonify, g
+from flask_cors import CORS
 import datetime
 import pandas as pd
 import json
@@ -72,7 +74,17 @@ class Manager:
         self.data = pd.read_csv(self.filename)
 
 
-if __name__ == "__main__":
-    manager = Manager.get_instance()
+manager = Manager.get_instance()
+app = Flask("Geno")
+CORS(app)
+
+
+@app.route('/feed/refresh', methods=['GET'])
+def refresh():
+    loc = request.args['loc']
     manager.update_dataset_if_needed()
-    manager.get_data("Los Angeles")
+    return manager.get_data(loc)
+
+
+if __name__ == '__main__':
+    app.run(port=3313, debug=False, threaded=True)
