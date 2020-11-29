@@ -62,7 +62,7 @@ const Tab3: React.FC = () => {
               <Route path={"/displayContacts"} component={displayContacts} exact={true}/> 
             </IonRouterOutlet>
           </IonReactRouter> */}
-          Send Message
+          Share
         </IonButton>
       </IonFooter>
 
