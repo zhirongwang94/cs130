@@ -147,25 +147,27 @@ class ContactTracing {
   //Void input
   //Void output
   public share(){
-    var title:string = "Covid-19 Contact Alert!\nSomeone you have been in contact with is expiercing symptoms. Please take appropriate precautions.";
-    var link:string = 'https://www.cdc.gov/coronavirus/2019-ncov/index.html';
-    var diaTitle = 'Share with those who you have been in contact with';
+    let title:string = "Covid-19 Contact Alert!\nSomeone you have been in contact with is expiercing symptoms. Please take appropriate precautions.";
+    let link:string = 'https://www.cdc.gov/coronavirus/2019-ncov/index.html';
+    let diaTitle = 'Share with those who you have been in contact with';
 
-    var message:string = "Covid-19 Contact Alert!\n";
-    message += "------------------------------\nSEEK IMMEDIATE MEDICAL ATTENTION IF EXPERIENCING:\n";
+    let message:string = "Covid-19 Contact Alert!\nI am experiencing the following symptoms:\n";
+    message += "------------------------------\n";
+    
     for(var index in this.emergencyList){
       if(this.emergencyList[index].isChecked){
-        message += this.emergencyList[index].val + "\n";
+        message += "- " + this.emergencyList[index].val + " (EMERGENCY symptom!)\n";
       }
     }
-
-    message += "------------------------------\nNon-Emergency Symptoms:\n";
     for(var index1 in this.symptomList){
       if(this.symptomList[index1].isChecked){
-        message += this.symptomList[index1].val + "\n";
+        message += "- " + this.symptomList[index1].val + "\n";
       }
     }
+    message += "------------------------------\n";
+
     this.sendMessage(title,message, link, diaTitle);
+
   }
 
   //Async method to launch share functionality
