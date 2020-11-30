@@ -1,6 +1,12 @@
 import React,  { Component,useState } from 'react';
 import GoogleMapReact from 'google-map-react';
+import './map.css'  // for the map, className="google-map"
+import { Icon } from '@iconify/react'  // for map pin
+import locationIcon from '@iconify/icons-mdi/map-marker' // for map pin
+import PlaceCard from '../components/PlaceCard';
+
 //import { Geolocation, Geoposition } from '@ionic-native/geolocation';
+import { Button, Input, Divider, message } from 'antd';
 import { AnyCnameRecord } from 'dns';
 import {
     IonHeader,
@@ -14,7 +20,6 @@ import {
     IonButton,
     IonPage
   } from "@ionic/react";
-
 
 class Tab1 extends Component  {
     constructor(props) {
@@ -99,61 +104,77 @@ class Tab1 extends Component  {
               latitude: position.coords.latitude, 
               longitude: position.coords.longitude
           })
-      
       )
   }
-    handleClick = () => {
-        this.componentDidMount();
-        console.log("set longitude:",this.state.longitude);
-      }
+
+//    handleClick = () => {
+//        this.componentDidMount();
+//        console.log("set longitude:",this.state.longitude);
+//      }
       
 
       //<IonButton color="primary" onClick={this.getLocation}>{this.state.longitude ? `${this.state.latitude} ${this.state.longitude}` : "Get Location"}</IonButton>
       render(){
-        //const { constraints, mapsLoaded, singaporeLatLng, markers, searchResults } = this.state;
-        const { markers, geoCoderService,searchResults } = this.state; // Google Maps Services
+      //const { constraints, mapsLoaded, singaporeLatLng, markers, searchResults } = this.state;
+      const { markers, geoCoderService,searchResults } = this.state; // Google Maps Services
       return(
               <IonPage>
+
+                      {/* 
               <IonHeader>
                 <IonToolbar color="primary">
                   <IonTitle>Login</IonTitle>
                 </IonToolbar>
               </IonHeader>
-              <div>            
-            <IonButton color="primary" onClick={this.handleClick}>
-              {"Update my locations"} 
-            </IonButton> 
-          </div>
+                        */}
+
               <IonContent>
-              <div>Current Location: {JSON.stringify(this.state.latitude  )} ,  {JSON.stringify(this.state.latitude )}</div> 
-              <div>Initial Location: {JSON.stringify(this.state.latitude )} ,  {JSON.stringify(this.state.longitude)}</div> 
-              <IonButton color="primary" onClick={this.handleSearch}>
-              {"search"} 
-            </IonButton> 
-            {searchResults.length > 0 ? 
-               <>
-               <div>
-               {JSON.stringify(searchResults)}
-               </div>
-               </>
-               : null}
-              <div className="google-map">
+              <div>Current Location: {JSON.stringify(this.state.latitude  )} ,  {JSON.stringify(this.state.longitude )}</div> 
+              <div>Initial Location: {JSON.stringify(this.state.latitude )} ,  {JSON.stringify(this.state.longitude)}</div>               
+{/*************** Maps Section ******************************************************************************/}              
+            <div className="google-map">
             <GoogleMapReact
               bootstrapURLKeys={{
                 key: "AIzaSyBj9b-EHxuAAihd8u2HBBqWOSXukFlA3jY",
                 libraries: ['places', 'directions']
               }}
-              defaultZoom={11}
-              defaultCenter={{ lat: this.state.latitude, lng: this.state.longitude }}
-              //yesIWantToUseGoogleMapApiInternals={true}
+              defaultZoom={15}
+              defaultCenter={{ lat: 38, lng: -118 }}
+              center={{ lat: this.state.latitude, lng: this.state.longitude }}
+              yesIWantToUseGoogleMapApiInternals={true}
               yesIWantToUseGoogleMapApiInternals
               onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)} // "maps" is the mapApi. Bad naming but that's their library.
             >
+              <div className="pin">
+                <Icon icon={locationIcon} className="pin-icon" />
+              </div>
 
-  
                </GoogleMapReact>
                </div>
-               
+
+
+{/*************** Search Button ******************************************************************************/}           
+              <IonButton color="primary" onClick={this.handleSearch}> {"search"}  </IonButton> 
+
+
+{/*************** Result Section ******************************************************************************/}
+            {searchResults.length > 0 ? 
+               <>
+
+<section className="col-12">
+<div className="d-flex flex-column justify-content-center">
+
+              <h1 className="mb-4 fw-md">Testing Center Nearby</h1>
+
+                 <div className="d-flex flex-wrap">
+                    {searchResults.map((result, key) => (<PlaceCard info={result} key={key} />))}
+                </div>
+
+</div>                        
+</section>               
+               </>
+               : null}
+
                 </IonContent>
                 </IonPage>
             );
