@@ -4,6 +4,7 @@ import './map.css'  // for the map, className="google-map"
 import { Icon } from '@iconify/react'  // for map pin
 import locationIcon from '@iconify/icons-mdi/map-marker' // for map pin
 import PlaceCard from '../components/PlaceCard';
+import Marker from './Marker';
 
 //import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Button, Input, Divider, message } from 'antd';
@@ -79,6 +80,8 @@ class Tab1 extends Component  {
                   const covidTesting = response[i];
                   const { rating, name } = covidTesting;
                   const address = covidTesting.formatted_address; 
+                  const lat = covidTesting.geometry.location.lat();
+                  const lng = covidTesting.geometry.location.lng();
                   let openNow = false;
                   if (covidTesting.opening_hours) {
                       openNow = covidTesting.opening_hours.isOpen(); // e.g true/false
@@ -86,8 +89,10 @@ class Tab1 extends Component  {
                   //console.log(name,address, openNow);
                   filteredResults.push({
                     name,
-                    rating,
                     address,
+                    rating,
+                    lat, 
+                    lng,
                     openNow,
                   });
                   this.setState({ searchResults: filteredResults });
@@ -107,6 +112,7 @@ class Tab1 extends Component  {
       )
   }
 
+
 //    handleClick = () => {
 //        this.componentDidMount();
 //        console.log("set longitude:",this.state.longitude);
@@ -115,8 +121,11 @@ class Tab1 extends Component  {
 
       //<IonButton color="primary" onClick={this.getLocation}>{this.state.longitude ? `${this.state.latitude} ${this.state.longitude}` : "Get Location"}</IonButton>
       render(){
+
       //const { constraints, mapsLoaded, singaporeLatLng, markers, searchResults } = this.state;
       const { markers, geoCoderService,searchResults } = this.state; // Google Maps Services
+      const site_lat  =  this.state.searchResults[0] ?  this.state.searchResults[0].lat : 10;
+      const site_lng  =  this.state.searchResults[0] ?  this.state.searchResults[0].lng : 11; 
       return(
               <IonPage>
 
@@ -144,10 +153,9 @@ class Tab1 extends Component  {
               yesIWantToUseGoogleMapApiInternals={true}
               yesIWantToUseGoogleMapApiInternals
               onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)} // "maps" is the mapApi. Bad naming but that's their library.
+
             >
-              <div className="pin">
-                <Icon icon={locationIcon} className="pin-icon" />
-              </div>
+             <Marker lat={this.state.latitude} lng={this.state.longitude} name="My Marker" color="blue"/>
 
                </GoogleMapReact>
                </div>
