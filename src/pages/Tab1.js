@@ -5,6 +5,9 @@ import { Icon } from '@iconify/react'  // for map pin
 import locationIcon from '@iconify/icons-mdi/map-marker' // for map pin
 import PlaceCard from '../components/PlaceCard';
 import Marker from './Marker';
+import { Plugins } from '@capacitor/core';
+
+
 
 //import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Button, Input, Divider, message } from 'antd';
@@ -21,7 +24,7 @@ import {
     IonButton,
     IonPage
   } from "@ionic/react";
-
+const { Geolocation } = Plugins;
 class Tab1 extends Component  {
     constructor(props) {
         super(props);
@@ -104,12 +107,17 @@ class Tab1 extends Component  {
     });
     
     async componentDidMount() {
-      await navigator.geolocation.getCurrentPosition(
-          position => this.setState({ 
-              latitude: position.coords.latitude, 
-              longitude: position.coords.longitude
-          })
-      )
+      //await navigator.geolocation.getCurrentPosition(
+      //    position => this.setState({ 
+      //        latitude: position.coords.latitude, 
+      //        longitude: position.coords.longitude
+      //    })
+      //)
+      const coordinates = await Geolocation.getCurrentPosition();
+      this.setState({ 
+               latitude: coordinates.coords.latitude, 
+                longitude: coordinates.coords.longitude
+            })
   }
 
 
