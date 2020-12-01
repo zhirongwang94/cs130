@@ -5,9 +5,7 @@ import { Icon } from '@iconify/react'  // for map pin
 import locationIcon from '@iconify/icons-mdi/map-marker' // for map pin
 import PlaceCard from '../components/PlaceCard';
 import Marker from './Marker';
-import { Plugins } from '@capacitor/core';
-
-
+import SimpleMarker from './SimpleMarker';
 
 //import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Button, Input, Divider, message } from 'antd';
@@ -24,7 +22,17 @@ import {
     IonButton,
     IonPage
   } from "@ionic/react";
+import { Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
+const lats = [37.7313933, 37.7413933, 37.7413933]
+const LocationPin = () => (
+<div>
+  <SimpleMarker name="My Marker" color="blue"/>
+  <p>1</p>
+</div>
+
+)
+
 class Tab1 extends Component  {
     constructor(props) {
         super(props);
@@ -39,6 +47,17 @@ class Tab1 extends Component  {
             placesService: {},
             geoCoderService: {},
             directionService: {},
+            testing_site_locations: [], // array of {lat: number, lng: number}
+            siteLat0: 38,
+            siteLat1: 38, 
+            siteLat2: 38,
+            siteLat3: 38,
+            siteLat4: 38,
+            siteLng0: -118,
+            siteLng1: -118,
+            siteLng2: -118,
+            siteLng3: -118,
+            siteLng4: -118,
         };
     }
     apiHasLoaded = ((map, mapsApi) => {
@@ -63,6 +82,7 @@ class Tab1 extends Component  {
       console.log(this.state.latitude, this.state.longitude);
         let {markers, placesService, directionService,mapsApi } = this.state;
         const filteredResults = [];
+        const testing_site_latlng_array = [];
         //if (markers.length === 0){
         //  console.log("add marker and try again");
         //  return;
@@ -100,7 +120,22 @@ class Tab1 extends Component  {
                   });
                   this.setState({ searchResults: filteredResults });
               }
-              console.log(this.state.searchResults);
+              console.log(this.state.searchResults);  
+
+              this.setState({siteLat0: this.state.searchResults[0].lat})
+              this.setState({siteLng0: this.state.searchResults[0].lng})
+
+              this.setState({siteLat1: this.state.searchResults[1].lat})
+              this.setState({siteLng1: this.state.searchResults[1].lng})
+
+              this.setState({siteLat2: this.state.searchResults[2].lat})
+              this.setState({siteLng2: this.state.searchResults[2].lng})
+
+              this.setState({siteLat3: this.state.searchResults[3].lat})
+              this.setState({siteLng3: this.state.searchResults[3].lng})
+
+              this.setState({siteLat4: this.state.searchResults[4].lat})
+              this.setState({siteLng4: this.state.searchResults[4].lng})
               
           }
           ))
@@ -132,8 +167,6 @@ class Tab1 extends Component  {
 
       //const { constraints, mapsLoaded, singaporeLatLng, markers, searchResults } = this.state;
       const { markers, geoCoderService,searchResults } = this.state; // Google Maps Services
-      const site_lat  =  this.state.searchResults[0] ?  this.state.searchResults[0].lat : 10;
-      const site_lng  =  this.state.searchResults[0] ?  this.state.searchResults[0].lng : 11; 
       return(
               <IonPage>
 
@@ -155,7 +188,7 @@ class Tab1 extends Component  {
                 key: "AIzaSyBj9b-EHxuAAihd8u2HBBqWOSXukFlA3jY",
                 libraries: ['places', 'directions']
               }}
-              defaultZoom={15}
+              defaultZoom={12}
               defaultCenter={{ lat: 38, lng: -118 }}
               center={{ lat: this.state.latitude, lng: this.state.longitude }}
               yesIWantToUseGoogleMapApiInternals={true}
@@ -163,7 +196,15 @@ class Tab1 extends Component  {
               onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)} // "maps" is the mapApi. Bad naming but that's their library.
 
             >
+
              <Marker lat={this.state.latitude} lng={this.state.longitude} name="My Marker" color="blue"/>
+             <SimpleMarker lat={this.state.siteLat0} lng={this.state.siteLng0} name="My Marker" color="red"/>
+             <SimpleMarker lat={this.state.siteLat1} lng={this.state.siteLng1} name="My Marker" color="red"/>
+             <SimpleMarker lat={this.state.siteLat2} lng={this.state.siteLng2} name="My Marker" color="red"/>
+             <SimpleMarker lat={this.state.siteLat3} lng={this.state.siteLng3} name="My Marker" color="red"/>
+             <SimpleMarker lat={this.state.siteLat4} lng={this.state.siteLng4} name="My Marker" color="red"/>
+
+
 
                </GoogleMapReact>
                </div>
@@ -177,17 +218,17 @@ class Tab1 extends Component  {
             {searchResults.length > 0 ? 
                <>
 
-<section className="col-12">
-<div className="d-flex flex-column justify-content-center">
+        <section className="col-12">
+        <div className="d-flex flex-column justify-content-center">
 
-              <h1 className="mb-4 fw-md">Testing Center Nearby</h1>
+                <h1 className="mb-4 fw-md">Testing Center Nearby</h1>
 
-                 <div className="d-flex flex-wrap">
-                    {searchResults.map((result, key) => (<PlaceCard info={result} key={key} />))}
-                </div>
+                   <div className="d-flex flex-wrap">
+                      {searchResults.map((result, key) => (<PlaceCard info={result} key={key} />))}
+                  </div>
 
-</div>                        
-</section>               
+        </div>                        
+        </section>               
                </>
                : null}
 
