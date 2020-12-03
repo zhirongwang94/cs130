@@ -10,20 +10,26 @@ import SimpleMarker from './SimpleMarker';
 //import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Button, Input, Divider, message } from 'antd';
 import { AnyCnameRecord } from 'dns';
+
 import {
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle, IonContent,
     IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonList,
+    IonImg,
+    IonPage, IonTitle, IonToolbar,
+    IonBadge,
     IonItem,
     IonLabel,
-    IonInput,
-    IonButton,
-    IonPage
-  } from "@ionic/react";
+    IonListHeader,
+    IonList,
+    IonButton
+} from "@ionic/react";
 
-
+import { Plugins } from '@capacitor/core';
+const { Geolocation } = Plugins;
 const lats = [37.7313933, 37.7413933, 37.7413933]
 const LocationPin = () => (
 <div>
@@ -39,7 +45,7 @@ class Tab1 extends Component  {
         this.state = {
             mapsLoaded: false,     
             latitude:38,
-            longitude:-118,
+            longitude:-100,
             map: {},
             mapsApi: {},
             markers: [],
@@ -106,10 +112,15 @@ class Tab1 extends Component  {
                   const lat = covidTesting.geometry.location.lat();
                   const lng = covidTesting.geometry.location.lng();
                   let openNow = false;
+                  let photoUrl = '';
                   if (covidTesting.opening_hours) {
                       openNow = covidTesting.opening_hours.isOpen(); // e.g true/false
                   }
-                  //console.log(name,address, openNow);
+                  if (covidTesting.photos && covidTesting.photos.length > 0) {
+                    photoUrl = covidTesting.photos[0].getUrl();
+                  }
+                  console.log(name,address, openNow,rating);
+                  console.log(photoUrl);
                   filteredResults.push({
                     name,
                     address,
@@ -117,8 +128,32 @@ class Tab1 extends Component  {
                     lat, 
                     lng,
                     openNow,
+                    photoUrl,
                   });
-                  this.setState({ searchResults: filteredResults });
+                  this.setState({ searchResults: filteredResults .map((item, i) => (
+                      <IonCard>
+                        {item.photoUrl != ''?
+                         <>
+                          <IonImg src={item.photoUrl}/>
+                          </>
+                          : null
+                           }
+                          <IonCardHeader>
+                              <IonCardTitle>{item.name}</IonCardTitle>
+                              <IonCardSubtitle>{item.address}</IonCardSubtitle>
+                          </IonCardHeader>
+                          <IonCardContent>
+                          <li className="list-group-item">Rate:{item.rating}</li>
+                               
+                              {item.openNow ?
+            <li className="list-group-item">Open</li>
+            :
+            <li className="list-group-item">Closed</li>
+          }
+                          </IonCardContent>
+                      </IonCard>
+                  ))
+                  });
               }
               console.log(this.state.searchResults);  
 
@@ -161,7 +196,7 @@ class Tab1 extends Component  {
       render(){
 
       //const { constraints, mapsLoaded, singaporeLatLng, markers, searchResults } = this.state;
-      const { markers, geoCoderService,searchResults } = this.state; // Google Maps Services
+      const { markers, geoCoderService,searchResults,latitude,longitude } = this.state; // Google Maps Services
       return(
               <IonPage>
 
@@ -184,14 +219,16 @@ class Tab1 extends Component  {
                 libraries: ['places', 'directions']
               }}
               defaultZoom={12}
-              defaultCenter={{ lat: 38, lng: -118 }}
-              center={{ lat: this.state.latitude, lng: this.state.longitude }}
+              //defaultCenter={{ lat: 38, lng: -118 }}
+              center={{ lat: latitude, lng: longitude }}
               yesIWantToUseGoogleMapApiInternals={true}
               yesIWantToUseGoogleMapApiInternals
               onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)} // "maps" is the mapApi. Bad naming but that's their library.
 
             >
-
+              
+              {searchResults.length > 0 ? 
+              <>
              <Marker lat={this.state.latitude} lng={this.state.longitude} name="My Marker" color="blue"/>
              <SimpleMarker lat={this.state.siteLat0} lng={this.state.siteLng0} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat1} lng={this.state.siteLng1} name="My Marker" color="red"/>
@@ -199,7 +236,8 @@ class Tab1 extends Component  {
              <SimpleMarker lat={this.state.siteLat3} lng={this.state.siteLng3} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat4} lng={this.state.siteLng4} name="My Marker" color="red"/>
 
-
+             </>
+             : null}
 
                </GoogleMapReact>
                </div>
@@ -212,18 +250,7 @@ class Tab1 extends Component  {
 {/*************** Result Section ******************************************************************************/}
             {searchResults.length > 0 ? 
                <>
-
-        <section className="col-12">
-        <div className="d-flex flex-column justify-content-center">
-
-                <h1 className="mb-4 fw-md">Testing Center Nearby</h1>
-
-                   <div className="d-flex flex-wrap">
-                      {searchResults.map((result, key) => (<PlaceCard info={result} key={key} />))}
-                  </div>
-
-        </div>                        
-        </section>               
+               {searchResults}             
                </>
                : null}
 
