@@ -11,10 +11,19 @@ import ExploreContainer from '../components/ExploreContainer';
 import { useForm } from "react-hook-form"
 import {useHistory} from 'react-router-dom'
 import firebase from '../Firebase'
+import { Plugins, AppState, Geolocation } from '@capacitor/core';
+const { App } = Plugins;
+
 
 type SignIn = {
   e: string;
   p: string;
+}
+
+async function getPosition() {
+  const coordinates = await Geolocation.getCurrentPosition();
+  console.log("Current position", coordinates);
+  return coordinates['coords'];
 }
 
 const Login: React.FC = () => {
@@ -27,7 +36,7 @@ const Login: React.FC = () => {
   const onSubmit = (data: SignIn) => {
     firebase.auth().signInWithEmailAndPassword(data.e, data.p)
     .then((user:any)=>{
-      console.log(user)
+      console.log(user);
     }).then(()=>{
       history.push('/Tab1')
     })
@@ -59,8 +68,8 @@ const Login: React.FC = () => {
           name="p"
           ref={register}
           />
-        <IonButton justify-content='center' color="black" size='large' type="submit">Sign In</IonButton>
-        <IonButton color="black" size='large' onClick={goBack}>Back</IonButton>
+        <IonButton justify-content='center' expand="block" shape="round"  color="dark" fill="solid" type="submit">Sign In</IonButton>
+        <IonButton expand="block" shape="round"  color="dark" fill="solid" onClick={goBack}>Back</IonButton>
         </form>
       </IonContent>
     </IonPage>

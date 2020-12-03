@@ -6,10 +6,11 @@ import { Icon } from '@iconify/react'  // for map pin
 import PlaceCard from '../components/PlaceCard';
 import Marker from './Marker';
 import SimpleMarker from './SimpleMarker';
-
-//import { Geolocation, Geoposition } from '@ionic-native/geolocation';
+import firebase from '../Firebase';
+import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Button, Input, Divider, message } from 'antd';
 import { AnyCnameRecord } from 'dns';
+import {Plugins, LocalNotificationEnabledResult, LocalNotificationActionPerformed, Device} from '@capacitor/core';
 import {
     IonHeader,
     IonToolbar,
@@ -22,7 +23,9 @@ import {
     IonButton,
     IonPage
   } from "@ionic/react";
+import App from '../App';
 
+const {LocalNotifications} = Plugins;
 
 const lats = [37.7313933, 37.7413933, 37.7413933]
 const LocationPin = () => (
@@ -59,7 +62,14 @@ class Tab1 extends Component  {
             siteLng3: -118,
             siteLng4: -118,
         };
+        this.initNotif();
+        this.notif_timeout = new Date().getTime()-10000;
     }
+
+    async initNotif(){
+      await LocalNotifications.requestPermission();
+    }
+
     apiHasLoaded = ((map, mapsApi) => {
         this.setState({
           mapsLoaded: true,
@@ -76,10 +86,11 @@ class Tab1 extends Component  {
       if (this.state.map === {}){
         return
       }
-      console.log(this.state.mapsApi);
-      console.log(this.state.map);
-      console.log(this.state.placesService);
-      console.log(this.state.latitude, this.state.longitude);
+      
+      // console.log(this.state.mapsApi);
+      // console.log(this.state.map);
+      // console.log(this.state.placesService);
+      // console.log(this.state.latitude, this.state.longitude);
         let {markers, placesService, directionService,mapsApi } = this.state;
         const filteredResults = [];
         const testing_site_latlng_array = [];
@@ -95,9 +106,9 @@ class Tab1 extends Component  {
               query: 'covid 19 testing site',
               rankBy: mapsApi.places.RankBy.DISTANCE,
           }
-          console.log(placesRequest);
+          //console.log(placesRequest);
           placesService.textSearch(placesRequest, ((response) => {
-              console.log(response.length)
+              //console.log(response.length)
               let responseLimit = Math.min(5, response.length);
               for (let i = 0; i < responseLimit; i++) {
                   const covidTesting = response[i];
@@ -120,7 +131,7 @@ class Tab1 extends Component  {
                   });
                   this.setState({ searchResults: filteredResults });
               }
-              console.log(this.state.searchResults);  
+              //console.log(this.state.searchResults);  
 
               this.setState({siteLat0: this.state.searchResults[0].lat})
               this.setState({siteLng0: this.state.searchResults[0].lng})
@@ -143,19 +154,116 @@ class Tab1 extends Component  {
     
     async componentDidMount() {
       await navigator.geolocation.getCurrentPosition(
-          position => this.setState({ 
+          position => {this.setState({ 
               latitude: position.coords.latitude, 
               longitude: position.coords.longitude
-          })
-      )
-  }
+          });
+          //console.log('Position\n', position);
+        }
+      );
 
+      var id = navigator.geolocation.watchPosition(
+        (position) => {
+          const userLoc = {latitude:position.coords.latitude, longitude: position.coords.longitude};
+          //console.log("Location\n", userLoc);
+          const db = firebase.firestore().collection('users');
+          const user = firebase.auth().currentUser;
+          var user_id = '';
+          if (user!=null){
+            user_id = user.uid.toString();
+            db.doc(user_id).set({'location': userLoc});
+            this.nearPositive(userLoc);
+          }
+        },
+        (err)=>{
+          if(err.code == 1) {
+            console.log("Error: Access is denied!");
+          } else if( err.code == 2) {
+            console.log("Error: Position is unavailable!");
+          }
+        }, 
+        { enableHighAccuracy:false ,timeout: 60000, maximumAge:30000}
+      );
+    }
 
-//    handleClick = () => {
-//        this.componentDidMount();
-//        console.log("set longitude:",this.state.longitude);
-//      }
+    //if user is near positive user, will send local alert
+    nearPositive(location){
       
+      const all_usrs = firebase.firestore().collection('users');
+      const cur_user = firebase.auth().currentUser;
+      //console.log("\n");
+      let close_usrs = [];
+      let close_usrs_len = 0;
+      if(cur_user != null){
+      //grabs all users with the same lat and long degree
+        //console.log('usrs', all_usrs.get().doc);
+        all_usrs.get().then(snapshot=>{
+          snapshot.forEach(usr=>
+            {
+              let loc = usr.get('location');
+              if(loc != undefined){
+                //let loc = usr.data('location');
+                if(!usr.isEqual(cur_user)){
+                  console.log('distance:', this.distance(loc.latitude, loc.longitude, location.latitude, location.longitude));
+                  if(this.distance(loc.latitude, loc.longitude, location.latitude, location.longitude) < 0.01){
+                    //this is not pushing , object types
+                    // WRITTEN POSSIBLY NOT FUNC CODE
+                    if(usr.get('positive') != undefined){
+                      close_usrs_len=close_usrs_len+1;
+                    }
+                  }
+                }
+              }
+            });
+          //snapshot.docs.map(doc => console.log(doc.data()));
+          
+        }).then(() => {
+          console.log("len",close_usrs_len);
+          if(close_usrs_len > 0){
+            //   //check if users are positive
+            //   //implement a time out just to make sure there is no spam
+            let cur_time = new Date().getTime();
+            if(Math.abs(cur_time - this.notif_timeout) > 10000){
+              this.notify();
+              this.notif_timeout = cur_time;
+            }
+          }
+        });
+      }
+    }
+
+
+    async notify(){
+      await LocalNotifications.schedule({
+        notifications:[{
+          title: 'Covid Proximity!',
+          body: 'There is a Covid positive user near your location!',
+          id: 1,
+          sound: null,
+          iconColor: '#0000FF'
+          }
+        ]
+      });
+    }
+
+    degtorad(deg){
+      return deg * (Math.PI/180);
+    }
+
+    distance(lat1, lon1, lat2, lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = this.degtorad(lat2-lat1);  // deg2rad below
+      var dLon = this.degtorad(lon2-lon1); 
+      var a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(this.degtorad(lat1)) * Math.cos(this.degtorad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ; 
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+      var d = R * c; // Distance in km
+      return d;
+    }
+    
 
       //<IonButton color="primary" onClick={this.getLocation}>{this.state.longitude ? `${this.state.latitude} ${this.state.longitude}` : "Get Location"}</IonButton>
       render(){

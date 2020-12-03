@@ -19,10 +19,10 @@ function setUserId(stringIn:string){
 const OnOpen: React.FC = () => {
   const history = useHistory()
   const goNextCreateUser = () => {
-    history.push('/CreateUser')
+    history.push('/CreateUser');
   };
   const goNextLogin=()=>{
-    history.push('/Login')
+    history.push('/Login');
   };
 
   return (
@@ -35,8 +35,8 @@ const OnOpen: React.FC = () => {
       <IonContent>
         <div>
         </div>
-        <IonButton color="black" className = "buttons" size='large' onClick={goNextCreateUser}>New User</IonButton>
-        <IonButton color="black" className = "buttons" size='large' onClick={goNextLogin}>Login</IonButton>
+        <IonButton expand="block" shape="round"  color="dark" fill="solid" onClick={goNextCreateUser}>New User</IonButton>
+        <IonButton expand="block" shape="round"  color="dark" fill="solid" onClick={goNextLogin}>Login</IonButton>
       </IonContent>
     </IonPage>
   );

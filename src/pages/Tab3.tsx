@@ -3,10 +3,10 @@ import { IonFooter, IonButton, IonContent, IonHeader, IonPage, IonTitle, IonTool
 //import { SMS } from '@ionic-native/sms';
 //import {Contact} from "@capacitor-community/contacts";
 import  Singleton  from "./ContactTracing";
-import ExploreContainer from '../components/ExploreContainer';
+//import ExploreContainer from '../components/ExploreContainer';
 import './Tab3.css';
-import { scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
-import { isConstructorDeclaration } from 'typescript';
+//import { scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
+//import { isConstructorDeclaration } from 'typescript';
 //import {useHistory, Route} from 'react-router-dom'; //
 //import displayContacts from './displayContacts';
 //import { IonReactRouter } from '@ionic/react-router';

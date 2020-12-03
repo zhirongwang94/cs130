@@ -82,7 +82,7 @@ class ContactTracing {
   //Input: number i, 0 < i < symptomList.length
   //Void output
   public checkSymptom(i:number){
-    if(i < this.symptomList.length){
+    if(i >= 0 && i < this.symptomList.length){
       this.symptomList[i].isChecked = !(this.symptomList[i].isChecked);
     }
   }
@@ -92,7 +92,7 @@ class ContactTracing {
   //Input: number i, 0 < i < emergencyList.length
   //Void output
   public checkEmergency(i:number){
-    if(i < this.emergencyList.length){
+    if(i >= 0 && i < this.emergencyList.length){
       this.emergencyList[i].isChecked = !(this.emergencyList[i].isChecked);
     }
   }
@@ -101,7 +101,7 @@ class ContactTracing {
   //Input: number i, 0 < i < contacts.length
   //Void output
   public check(i:number){
-    if(i < this.conIndex.length){
+    if(this.conIndex != undefined && i >=0 && i< this.conIndex.length){
       this.conIndex[i] = !(this.conIndex[i]);
     }
   }
