@@ -1,8 +1,7 @@
-import { Contact } from "@capacitor-community/contacts";
-import { Plugins } from "@capacitor/core";
+//import { Contact } from "@capacitor-community/contacts";
 //import { SMS } from '@ionic-native/sms';
-const  { Contacts, Share } = Plugins;
-
+import { Plugins } from "@capacitor/core";
+const  { Share } = Plugins;
 
 var Singleton = (function () {
   let instance:ContactTracing;
@@ -22,11 +21,7 @@ var Singleton = (function () {
   };
 })();
 
-
 class ContactTracing {
-  private contacts:Contact[] = [];
-  private selected:Contact[] = [];
-  private conIndex:boolean[] = [];
 
   private symptomList = [
     {val: "Cough", isChecked: false},
@@ -50,102 +45,55 @@ class ContactTracing {
     {val: "Bluish lips or face", isChecked: false}
   ]
 
-  public constructor(){
+  public constructor(){}
 
-  }
-
-  //Getter method for emergency symptoms list
-  //Returns list of emergency symptoms to map to ContactTracing display
-  //Void input
-  //Output: list of {string, boolean} tuples
+  /**
+   * Getter method for emergency symptoms list
+   * @returns {Array<string, boolean>} list of emergency symptoms
+   */
   public getEmergencyList(){
     return this.emergencyList;
   }
 
-  //Getter method for symptoms list
-  //Returns list of symptoms to map to ContactTracing display
-  //Void input
-  //Output: list of {string, boolean} tuples
+  /**
+   * Getter method for symptoms list
+   * @returns {Array<string, boolean>} list of symptoms
+   */
   public getSymptomsList(){
     return this.symptomList;
   }
 
-  //Returns list of selected contacts to map to contact display
-  //Void input
-  //Output: boolean array of size contacts.length
-  public getContactIndex(){
-    return this.conIndex;
-  }
-
-  //Saves state of symptoms at index i
-  //to list in ContactTracing object
-  //Input: number i, 0 < i < symptomList.length
-  //Void output
+  /**
+   * Saves state of symptoms at specified index 'i' of 'symptomList'
+   * @param {number} i - Index of symptom to mark as true in 'symptomList'
+   */
   public checkSymptom(i:number){
     if(i >= 0 && i < this.symptomList.length){
       this.symptomList[i].isChecked = !(this.symptomList[i].isChecked);
     }
   }
   
-  //Saves state of emergency symptom at index i
-  //to list in ContactTracing object
-  //Input: number i, 0 < i < emergencyList.length
-  //Void output
+  /**
+   * Saves state of symptoms at specified index 'i' of 'emergencyList'
+   * @param {number} i - Index of symptom to mark as true in 'emergencyList'
+   */
   public checkEmergency(i:number){
     if(i >= 0 && i < this.emergencyList.length){
       this.emergencyList[i].isChecked = !(this.emergencyList[i].isChecked);
     }
   }
   
-  //Saves state of selected contact at index i
-  //Input: number i, 0 < i < contacts.length
-  //Void output
-  public check(i:number){
-    if(this.conIndex != undefined && i >=0 && i< this.conIndex.length){
-      this.conIndex[i] = !(this.conIndex[i]);
-    }
-  }
-  
-  //Getter method for all device contacts
-  //Will all async loadContacts method if contacts list has not been populated yet
-  //Void input
-  //Returns list of Contact objects
-  public getContacts(){
-    console.log('GRABBING CONTACT LIST FROM OBJECT\n');
-
-    //console.log(this.contacts);
-    if (this.contacts.length == 0){
-      this.loadContacts();
-    }
-    return this.contacts;
-
-  }
-
-  //Getter method for selected contacts
-  //Void input
-  //Returns list of Contact objects that have been selected using select()
-  public getSelected(){
-    return this.selected;
-  }
-
-  //Async method to load contacts from device to contacts list.
-  //Void input
-  //Void output
-  private async loadContacts(){
-    Contacts.getContacts().then(results => {
-    this.contacts = results.contacts;
-    console.log(this.contacts);
-
-    for(var i = 0; i < this.contacts.length; i++){
-      this.conIndex.push(false);
-    }
-    });
-  }
-
   //Method called by button GUI
   //Constructs message and calls async function to launch share functionality
   //Void input
   //Void output
+  /**
+   * Called on Tab 3 'Share' button press.
+   * @remarks
+   * Constructs strings for share functionality input based on selected symptoms
+   * saved in 'this.symptomList' and 'this.emergencyList'
+   * Calls async function 'sendMessage()'
+   */
   public share(){
     let title:string = "Covid-19 Contact Alert!\nSomeone you have been in contact with is expiercing symptoms. Please take appropriate precautions.";
     let link:string = 'https://www.cdc.gov/coronavirus/2019-ncov/index.html';
@@ -166,14 +114,17 @@ class ContactTracing {
     }
     message += "------------------------------\n";
 
-    this.sendMessage(title,message, link, diaTitle);
+    this.sendMessage(title, message, link, diaTitle);
 
   }
 
-  //Async method to launch share functionality
-  //Input: string title, string message
-  //  title and message to share
-  //Void output
+  /**
+   * Async method that calls Share.share()
+   * @param {string} title - Title of constructed message to be shared. Shown as subject for emails.
+   * @param {string} message - Main message; where symptoms are listed.
+   * @param {string} link - Link displayed at the end of shared message.
+   * @param {string} diaTitle - Set title of the share modal. Android only.
+   */
   private async sendMessage(title:string, message:string, link:string, diaTitle:string){
 
     let shareRet = await Share.share({

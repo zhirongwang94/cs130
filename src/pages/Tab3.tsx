@@ -1,22 +1,23 @@
 import React from 'react';
-import { IonFooter, IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCheckbox, IonList, IonItem, IonLabel, IonItemDivider, IonRouterOutlet } from '@ionic/react';
-//import { SMS } from '@ionic-native/sms';
-//import {Contact} from "@capacitor-community/contacts";
 import  Singleton  from "./ContactTracing";
-//import ExploreContainer from '../components/ExploreContainer';
-import './Tab3.css';
 import {useHistory} from 'react-router-dom';
 import {useForm} from 'react-hook-form';
-//import { scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
-//import { isConstructorDeclaration } from 'typescript';
-//import {useHistory, Route} from 'react-router-dom'; //
-//import displayContacts from './displayContacts';
-//import { IonReactRouter } from '@ionic/react-router';
-//import { IonReactRouter } from '@ionic/react-router';
-
-
-
-
+import './Tab3.css';
+//import { SMS } from '@ionic-native/sms';
+//import {Contact} from "@capacitor-community/contacts";
+import { IonFooter, 
+  IonButton, 
+  IonContent, 
+  IonHeader, 
+  IonPage, 
+  IonTitle, 
+  IonToolbar, 
+  IonCheckbox, 
+  IonList, 
+  IonItem, 
+  IonLabel, 
+  IonItemDivider 
+} from '@ionic/react';
 
 const ct = Singleton.getInstance();
 
@@ -26,13 +27,10 @@ const Tab3: React.FC = () => {
   const onSubmit = () => {
     history.push('/TestInput');
   }
+
+
   return (
     <IonPage>
-      {/* <IonReactRouter>
-      <IonRouterOutlet>
-          <Route path="/displayContacts" component={displayContacts} exact={true}/>
-      </IonRouterOutlet>
-      </IonReactRouter> */}
       <IonHeader>
         <IonToolbar>
           <IonTitle>Check Symptoms Experienced</IonTitle>
@@ -63,11 +61,6 @@ const Tab3: React.FC = () => {
 
       <IonFooter>
         <IonButton onClick={()=>ct.share()} expand="block" shape="round" justify-content='center' color="primary" fill="solid">
-          {/* <IonReactRouter>
-            <IonRouterOutlet>
-              <Route path={"/displayContacts"} component={displayContacts} exact={true}/> 
-            </IonRouterOutlet>
-          </IonReactRouter> */}
           Share
         </IonButton>
         <form onSubmit = {handleSubmit(onSubmit)}>
@@ -78,6 +71,4 @@ const Tab3: React.FC = () => {
     </IonPage>
   );
 };
-
-
 export default Tab3;

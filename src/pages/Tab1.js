@@ -72,6 +72,11 @@ class Tab1 extends Component  {
         this.notif_timeout = new Date().getTime()-10000;
     }
 
+    /**
+     * Asyncronous call to request device permissions for Local Notifications
+     * @remarks
+     * Call method before any calls that send local notifications.
+     */
     async initNotif(){
       await LocalNotifications.requestPermission();
     }
@@ -87,7 +92,6 @@ class Tab1 extends Component  {
         });
     });
     
-
     handleSearch = (() => {
       if (this.state.map === {}){
         return
@@ -208,7 +212,7 @@ class Tab1 extends Component  {
           if (user!=null){
             user_id = user.uid.toString();
             db.doc(user_id).set({'location': userLoc});
-            this.nearPositive(userLoc);
+            this.nearPositive(userLoc, 0.01);
           }
         },
         (err)=>{
@@ -222,10 +226,22 @@ class Tab1 extends Component  {
       );
     }
 
-
-    
-    //if user is near positive user, will send local alert
-    nearPositive(location){
+    /**
+     * Determines if there is another user near the point 
+     * represented by param location and sends local notification to user.
+     * 
+     * @remarks
+     * Queries firestore database for all user locations
+     * Uses distance(lat1, lon1, lat2, lon2) to determine distance between users
+     * 
+     * @param {Object} location - representation of a point in the Geographic Coordinate System
+     * @param {float} location.latitude - latitude value in degrees
+     * @param {float} location.longitude - longitude value in degrees
+     * @param {float} max_dist - maximum distance between users to be considered close
+     * 
+     * @returns {number} number of positive tested users considered close to current user
+     */
+    nearPositive(location, max_dist){
       const all_usrs = firebase.firestore().collection('users');
       const cur_user = firebase.auth().currentUser;
       //console.log("\n");
@@ -242,7 +258,7 @@ class Tab1 extends Component  {
                 //let loc = usr.data('location');
                 if(!usr.isEqual(cur_user)){
                   console.log('distance:', this.distance(loc.latitude, loc.longitude, location.latitude, location.longitude));
-                  if(this.distance(loc.latitude, loc.longitude, location.latitude, location.longitude) < 0.01){
+                  if(this.distance(loc.latitude, loc.longitude, location.latitude, location.longitude) < max_dist){
                     //this is not pushing , object types
                     // WRITTEN POSSIBLY NOT FUNC CODE
                     if(usr.get('testResult') == 'positive'){
@@ -262,13 +278,19 @@ class Tab1 extends Component  {
             if(Math.abs(cur_time - this.notif_timeout) > 10000){
               this.notify();
               this.notif_timeout = cur_time;
+              return close_usrs_len;
             }
           }
         });
       }
     }
 
-
+    /**
+     * Asynchronously sends local notification using capacitor plugin LocalNotifications
+     * 
+     * @remarks
+     * Must call LocalNotifications.requestPermission() before method call
+     */
     async notify(){
       await LocalNotifications.schedule({
         notifications:[{
@@ -282,10 +304,32 @@ class Tab1 extends Component  {
       });
     }
 
+    /**
+     * Converts a latitude-longitude degree to radians
+     * 
+     * @remarks
+     * Helper function for distance function
+     * 
+     * @param {float} deg - coordinate in degrees
+     * @returns {number} radian of 'deg'
+     */
     degtorad(deg){
       return deg * (Math.PI/180);
     }
 
+    /**
+     * Calculates the distance between two 
+     * Geographic coordinate system points
+     * 
+     * @remarks
+     * Uses helper function - degtorad(deg)
+     * 
+     * @param {float} lat1 - latitude of the first point
+     * @param {float} lon1 - longitude of the first point
+     * @param {float} lat2 - latitude of the second point
+     * @param {float} lon2 - longitude of the first point
+     * @returns {float} distance between the points (lat1, lon1) (lat2, lon2) in kilometers.
+     */
     distance(lat1, lon1, lat2, lon2) {
       var R = 6371; // Radius of the earth in km
       var dLat = this.degtorad(lat2-lat1);  // deg2rad below
