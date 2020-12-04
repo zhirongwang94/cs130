@@ -44,7 +44,7 @@ class Tab1 extends Component  {
         super(props);
         this.state = {
             mapsLoaded: false,     
-            latitude:38,
+            latitude:60,
             longitude:-100,
             map: {},
             mapsApi: {},
@@ -54,11 +54,11 @@ class Tab1 extends Component  {
             geoCoderService: {},
             directionService: {},
             testing_site_locations: [], // array of {lat: number, lng: number}
-            siteLat0: 38,
-            siteLat1: 38, 
-            siteLat2: 38,
-            siteLat3: 38,
-            siteLat4: 38,
+            siteLat0: 60,
+            siteLat1: 60, 
+            siteLat2: 60,
+            siteLat3: 60,
+            siteLat4: 60,
             siteLng0: -118,
             siteLng1: -118,
             siteLng2: -118,
@@ -119,7 +119,7 @@ class Tab1 extends Component  {
                   if (covidTesting.photos && covidTesting.photos.length > 0) {
                     photoUrl = covidTesting.photos[0].getUrl();
                   }
-                  console.log(name,address, openNow,rating);
+                  console.log(name,address, openNow,covidTesting.opening_hours, rating);
                   console.log(photoUrl);
                   filteredResults.push({
                     name,
@@ -157,20 +157,21 @@ class Tab1 extends Component  {
               }
               console.log(this.state.searchResults);  
 
-              this.setState({siteLat0: this.state.searchResults[0].lat})
-              this.setState({siteLng0: this.state.searchResults[0].lng})
+              this.setState({siteLat0: filteredResults[0].lat})
+              console.log(this.state.siteLat0);
+              this.setState({siteLng0: filteredResults[0].lng})
 
-              this.setState({siteLat1: this.state.searchResults[1].lat})
-              this.setState({siteLng1: this.state.searchResults[1].lng})
+              this.setState({siteLat1: filteredResults[1].lat})
+              this.setState({siteLng1: filteredResults[1].lng})
 
-              this.setState({siteLat2: this.state.searchResults[2].lat})
-              this.setState({siteLng2: this.state.searchResults[2].lng})
+              this.setState({siteLat2: filteredResults[2].lat})
+              this.setState({siteLng2: filteredResults[2].lng})
 
-              this.setState({siteLat3: this.state.searchResults[3].lat})
-              this.setState({siteLng3: this.state.searchResults[3].lng})
+              this.setState({siteLat3: filteredResults[3].lat})
+              this.setState({siteLng3: filteredResults[3].lng})
 
-              this.setState({siteLat4: this.state.searchResults[4].lat})
-              this.setState({siteLng4: this.state.searchResults[4].lng})
+              this.setState({siteLat4: filteredResults[4].lat})
+              this.setState({siteLng4: filteredResults[4].lng})
               
           }
           ))
@@ -199,6 +200,11 @@ class Tab1 extends Component  {
       const { markers, geoCoderService,searchResults,latitude,longitude } = this.state; // Google Maps Services
       return(
               <IonPage>
+                <IonHeader>
+                    <IonToolbar>
+                        <IonTitle>Testing Site Search</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
 
                       {/* 
               <IonHeader>
@@ -209,8 +215,7 @@ class Tab1 extends Component  {
                         */}
 
               <IonContent>
-              <div>Current Location: {JSON.stringify(this.state.latitude  )} ,  {JSON.stringify(this.state.longitude )}</div> 
-              <div>Initial Location: {JSON.stringify(this.state.latitude )} ,  {JSON.stringify(this.state.longitude)}</div>               
+              <div>Current Location: {JSON.stringify(this.state.latitude  )} ,  {JSON.stringify(this.state.longitude )}</div>         
 {/*************** Maps Section ******************************************************************************/}              
             <div className="google-map">
             <GoogleMapReact
@@ -218,7 +223,7 @@ class Tab1 extends Component  {
                 key: "AIzaSyBj9b-EHxuAAihd8u2HBBqWOSXukFlA3jY",
                 libraries: ['places', 'directions']
               }}
-              defaultZoom={12}
+              defaultZoom={5}
               //defaultCenter={{ lat: 38, lng: -118 }}
               center={{ lat: latitude, lng: longitude }}
               yesIWantToUseGoogleMapApiInternals={true}
@@ -227,17 +232,16 @@ class Tab1 extends Component  {
 
             >
               
-              {searchResults.length > 0 ? 
-              <>
+              
              <Marker lat={this.state.latitude} lng={this.state.longitude} name="My Marker" color="blue"/>
+             
              <SimpleMarker lat={this.state.siteLat0} lng={this.state.siteLng0} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat1} lng={this.state.siteLng1} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat2} lng={this.state.siteLng2} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat3} lng={this.state.siteLng3} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat4} lng={this.state.siteLng4} name="My Marker" color="red"/>
-
-             </>
-             : null}
+             
+             
 
                </GoogleMapReact>
                </div>
