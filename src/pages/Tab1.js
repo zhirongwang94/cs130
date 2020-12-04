@@ -19,20 +19,19 @@ import {
     IonCardTitle, IonContent,
     IonHeader,
     IonImg,
-    IonPage, IonTitle, IonToolbar,
+    IonPage, 
+    IonTitle, 
+    IonToolbar,
     IonBadge,
     IonItem,
     IonLabel,
     IonInput,
-    IonButton,
-    IonPage
+    IonButton
   } from "@ionic/react";
 import App from '../App';
 
 const {LocalNotifications} = Plugins;
 
-import { Plugins } from '@capacitor/core';
-const { Geolocation } = Plugins;
 const lats = [37.7313933, 37.7413933, 37.7413933]
 const LocationPin = () => (
 <div>
