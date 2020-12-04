@@ -68,7 +68,7 @@ const Login: React.FC = () => {
           name="p"
           ref={register}
           />
-        <IonButton justify-content='center' expand="block" shape="round"  color="dark" fill="solid" type="submit">Sign In</IonButton>
+        <IonButton justify-content='center' expand="block" shape="round"  color="primary" fill="solid" type="submit">Sign In</IonButton>
         <IonButton expand="block" shape="round"  color="dark" fill="solid" onClick={goBack}>Back</IonButton>
         </form>
       </IonContent>

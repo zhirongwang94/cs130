@@ -5,6 +5,8 @@ import { IonFooter, IonButton, IonContent, IonHeader, IonPage, IonTitle, IonTool
 import  Singleton  from "./ContactTracing";
 //import ExploreContainer from '../components/ExploreContainer';
 import './Tab3.css';
+import {useHistory} from 'react-router-dom';
+import {useForm} from 'react-hook-form';
 //import { scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 //import { isConstructorDeclaration } from 'typescript';
 //import {useHistory, Route} from 'react-router-dom'; //
@@ -19,7 +21,11 @@ import './Tab3.css';
 const ct = Singleton.getInstance();
 
 const Tab3: React.FC = () => {
-
+  const history = useHistory();
+  const {handleSubmit} = useForm();
+  const onSubmit = () => {
+    history.push('/TestInput');
+  }
   return (
     <IonPage>
       {/* <IonReactRouter>
@@ -56,7 +62,7 @@ const Tab3: React.FC = () => {
       </IonContent>
 
       <IonFooter>
-        <IonButton onClick={()=>ct.share()} expand="block" shape="round"  color="dark" fill="solid">
+        <IonButton onClick={()=>ct.share()} expand="block" shape="round" justify-content='center' color="primary" fill="solid">
           {/* <IonReactRouter>
             <IonRouterOutlet>
               <Route path={"/displayContacts"} component={displayContacts} exact={true}/> 
@@ -64,6 +70,9 @@ const Tab3: React.FC = () => {
           </IonReactRouter> */}
           Share
         </IonButton>
+        <form onSubmit = {handleSubmit(onSubmit)}>
+                  <IonButton type="submit" justify-content='center' expand="block" shape="round" color="secondary" fill="solid">Update Test Results</IonButton>
+        </form>
       </IonFooter>
 
     </IonPage>

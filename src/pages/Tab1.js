@@ -30,6 +30,7 @@ import {
   } from "@ionic/react";
 import App from '../App';
 
+
 const {LocalNotifications} = Plugins;
 
 const lats = [37.7313933, 37.7413933, 37.7413933]
@@ -46,8 +47,8 @@ class Tab1 extends Component  {
         super(props);
         this.state = {
             mapsLoaded: false,     
-            latitude:60,
-            longitude:-100,
+            latitude:40.771919,
+            longitude:-73.746971,
             map: {},
             mapsApi: {},
             markers: [],
@@ -221,9 +222,10 @@ class Tab1 extends Component  {
       );
     }
 
+
+    
     //if user is near positive user, will send local alert
     nearPositive(location){
-      
       const all_usrs = firebase.firestore().collection('users');
       const cur_user = firebase.auth().currentUser;
       //console.log("\n");
@@ -243,14 +245,13 @@ class Tab1 extends Component  {
                   if(this.distance(loc.latitude, loc.longitude, location.latitude, location.longitude) < 0.01){
                     //this is not pushing , object types
                     // WRITTEN POSSIBLY NOT FUNC CODE
-                    if(usr.get('positive') != undefined){
+                    if(usr.get('testResult') == 'positive'){
                       close_usrs_len=close_usrs_len+1;
                     }
                   }
                 }
               }
             });
-          //snapshot.docs.map(doc => console.log(doc.data()));
           
         }).then(() => {
           console.log("len",close_usrs_len);
@@ -322,7 +323,7 @@ class Tab1 extends Component  {
                         */}
 
               <IonContent>
-              <div>Current Location: {JSON.stringify(this.state.latitude  )} ,  {JSON.stringify(this.state.longitude )}</div>         
+              {/* <div>Current Location: {JSON.stringify(this.state.latitude  )} ,  {JSON.stringify(this.state.longitude )}</div>          */}
 {/*************** Maps Section ******************************************************************************/}              
             <div className="google-map">
             <GoogleMapReact
@@ -355,7 +356,7 @@ class Tab1 extends Component  {
 
 
 {/*************** Search Button ******************************************************************************/}           
-              <IonButton color="primary" onClick={this.handleSearch}> {"search"}  </IonButton> 
+              <IonButton justify-content='center' expand="block" shape="round" color="primary" onClick={this.handleSearch}> {"search"}  </IonButton> 
 
 
 {/*************** Result Section ******************************************************************************/}
@@ -364,7 +365,7 @@ class Tab1 extends Component  {
                {searchResults}             
                </>
                : null}
-
+                
                 </IonContent>
                 </IonPage>
             );

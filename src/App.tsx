@@ -18,6 +18,7 @@ import Symptoms from './pages/Symptoms'
 import Login from './pages/Login'
 import CreateUser from './pages/CreateUser'
 import OnOpen from './pages/OnOpen'
+import TestInput from './pages/testinput'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -50,6 +51,7 @@ const App: React.FC = () => (
           <Route path="/tab1" component={Tab1} exact={true} />
           <Route path="/tab2" component={Tab2} exact={true} />
           <Route path="/tab3" component={Tab3} exact={true}/>
+          <Route path="/testinput" component={TestInput} exact={true}/>
           <Route path="/" render={() => <Redirect to="/OnOpen" />} exact={true} />
           <Route path="/Symptoms" component={Symptoms} exact={true}/>
           <Route path="/displayContacts" component={displayContacts} exact={true}/>

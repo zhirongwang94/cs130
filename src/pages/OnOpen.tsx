@@ -35,8 +35,8 @@ const OnOpen: React.FC = () => {
       <IonContent>
         <div>
         </div>
-        <IonButton expand="block" shape="round"  color="dark" fill="solid" onClick={goNextCreateUser}>New User</IonButton>
-        <IonButton expand="block" shape="round"  color="dark" fill="solid" onClick={goNextLogin}>Login</IonButton>
+        <IonButton expand="block" shape="round"  color="primary" fill="solid" onClick={goNextCreateUser}>New User</IonButton>
+        <IonButton expand="block" shape="round"  color="secondary" fill="solid" onClick={goNextLogin}>Login</IonButton>
       </IonContent>
     </IonPage>
   );
