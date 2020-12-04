@@ -38,7 +38,6 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import displayContacts from './pages/displayContacts';
 
 /* Import SMS, Contacts modules */
 
@@ -54,7 +53,6 @@ const App: React.FC = () => (
           <Route path="/testinput" component={TestInput} exact={true}/>
           <Route path="/" render={() => <Redirect to="/OnOpen" />} exact={true} />
           <Route path="/Symptoms" component={Symptoms} exact={true}/>
-          <Route path="/displayContacts" component={displayContacts} exact={true}/>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="tab1" href="/tab1">
