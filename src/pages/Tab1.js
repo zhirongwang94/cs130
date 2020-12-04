@@ -10,11 +10,7 @@ import firebase from '../Firebase';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Button, Input, Divider, message } from 'antd';
 import { AnyCnameRecord } from 'dns';
-<<<<<<< HEAD
 import {Plugins, LocalNotificationEnabledResult, LocalNotificationActionPerformed, Device} from '@capacitor/core';
-=======
-
->>>>>>> edc76f5cea7471de8abf6c60f8416320700219a7
 import {
     IonCard,
     IonCardContent,
@@ -27,7 +23,6 @@ import {
     IonBadge,
     IonItem,
     IonLabel,
-<<<<<<< HEAD
     IonInput,
     IonButton,
     IonPage
@@ -35,12 +30,6 @@ import {
 import App from '../App';
 
 const {LocalNotifications} = Plugins;
-=======
-    IonListHeader,
-    IonList,
-    IonButton
-} from "@ionic/react";
->>>>>>> edc76f5cea7471de8abf6c60f8416320700219a7
 
 import { Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
