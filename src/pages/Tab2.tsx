@@ -35,8 +35,12 @@ class newsFeed extends React.Component<{}, { Posts: string}>{
         this.latitude = 38;
         this.longitude = -118;
     }
+
+    /**
+     * Async method to render the Posts with the current
+     * county name.
+     */
     renderPosts = async() => {
-        console.log("hello world")
         let url = "https://gnews.io/api/v4/search?q=" + this.county + " Covid&lang=en&country=us&max=10&token=75459139b9417d88389a866dda4a84cb"
         console.log(url)
         let res = await axios({url: url,
@@ -56,9 +60,11 @@ class newsFeed extends React.Component<{}, { Posts: string}>{
                 </IonCard>
             ))
         });
-        // console.log(state)
-        // console.log("hello world")
     }
+
+    /**
+     * Async method to get the positive cases from backend.
+     */
     renderCases = async() => {
         console.log("hello world")
         let url = "http://127.0.0.1:3313/feed/refresh?loc=" + this.county;
@@ -69,8 +75,12 @@ class newsFeed extends React.Component<{}, { Posts: string}>{
         console.log(res.data.cases);
         console.log(res.data.deaths);
     }
+
+    /**
+     * Async function to get the current user location. After the callback function,
+     * we will get the State and County name
+     */
     getLatLong = async() => {
-        console.log("hello");
         new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(
                 position => {
@@ -90,6 +100,11 @@ class newsFeed extends React.Component<{}, { Posts: string}>{
             );
         })
     }
+
+    /**
+     * Calculate the State and County name given the latitude and longitude stored in the
+     * state.
+     */
     getLocation = async() => {
         console.log(this.latitude);
         console.log(this.longitude);
@@ -104,9 +119,20 @@ class newsFeed extends React.Component<{}, { Posts: string}>{
         console.log(this.county);
 
     }
+
+    /**
+     * Asyncronous call to request device permissions for Local current location to feed the news and
+     * report positve cases
+     * @remarks
+     * Call method when generating the scripts.
+     */
     componentDidMount() {
         this.getLatLong();
     }
+
+    /**
+     * Render the page method
+     */
     render() {
         return (
             <IonPage>
