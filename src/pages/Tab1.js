@@ -2,7 +2,7 @@ import React,  { Component,useState } from 'react';
 import GoogleMapReact from 'google-map-react';
 import './map.css'  // for the map, className="google-map"
 import { Icon } from '@iconify/react'  // for map pin
-import locationIcon from '@iconify/icons-mdi/map-marker' // for map pin
+//import locationIcon from '@iconify/icons-mdi/map-marker' // for map pin
 import PlaceCard from '../components/PlaceCard';
 import Marker from './Marker';
 import SimpleMarker from './SimpleMarker';
@@ -10,18 +10,24 @@ import SimpleMarker from './SimpleMarker';
 //import { Geolocation, Geoposition } from '@ionic-native/geolocation';
 import { Button, Input, Divider, message } from 'antd';
 import { AnyCnameRecord } from 'dns';
+
 import {
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle, IonContent,
     IonHeader,
-    IonToolbar,
-    IonTitle,
-    IonContent,
-    IonList,
+    IonImg,
+    IonPage, IonTitle, IonToolbar,
+    IonBadge,
     IonItem,
     IonLabel,
-    IonInput,
-    IonButton,
-    IonPage
-  } from "@ionic/react";
+    IonListHeader,
+    IonList,
+    IonButton
+} from "@ionic/react";
+
 import { Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
 const lats = [37.7313933, 37.7413933, 37.7413933]
@@ -38,8 +44,8 @@ class Tab1 extends Component  {
         super(props);
         this.state = {
             mapsLoaded: false,     
-            latitude:38,
-            longitude:-118,
+            latitude:60,
+            longitude:-100,
             map: {},
             mapsApi: {},
             markers: [],
@@ -48,11 +54,11 @@ class Tab1 extends Component  {
             geoCoderService: {},
             directionService: {},
             testing_site_locations: [], // array of {lat: number, lng: number}
-            siteLat0: 38,
-            siteLat1: 38, 
-            siteLat2: 38,
-            siteLat3: 38,
-            siteLat4: 38,
+            siteLat0: 60,
+            siteLat1: 60, 
+            siteLat2: 60,
+            siteLat3: 60,
+            siteLat4: 60,
             siteLng0: -118,
             siteLng1: -118,
             siteLng2: -118,
@@ -106,10 +112,15 @@ class Tab1 extends Component  {
                   const lat = covidTesting.geometry.location.lat();
                   const lng = covidTesting.geometry.location.lng();
                   let openNow = false;
+                  let photoUrl = '';
                   if (covidTesting.opening_hours) {
                       openNow = covidTesting.opening_hours.isOpen(); // e.g true/false
                   }
-                  //console.log(name,address, openNow);
+                  if (covidTesting.photos && covidTesting.photos.length > 0) {
+                    photoUrl = covidTesting.photos[0].getUrl();
+                  }
+                  console.log(name,address, openNow,covidTesting.opening_hours, rating);
+                  console.log(photoUrl);
                   filteredResults.push({
                     name,
                     address,
@@ -117,42 +128,62 @@ class Tab1 extends Component  {
                     lat, 
                     lng,
                     openNow,
+                    photoUrl,
                   });
-                  this.setState({ searchResults: filteredResults });
+                  this.setState({ searchResults: filteredResults .map((item, i) => (
+                      <IonCard>
+                        {item.photoUrl != ''?
+                         <>
+                          <IonImg src={item.photoUrl}/>
+                          </>
+                          : null
+                           }
+                          <IonCardHeader>
+                              <IonCardTitle>{item.name}</IonCardTitle>
+                              <IonCardSubtitle>{item.address}</IonCardSubtitle>
+                          </IonCardHeader>
+                          <IonCardContent>
+                          <li className="list-group-item">Rate:{item.rating}</li>
+                               
+                              {item.openNow ?
+            <li className="list-group-item">Open</li>
+            :
+            <li className="list-group-item">Closed</li>
+          }
+                          </IonCardContent>
+                      </IonCard>
+                  ))
+                  });
               }
               console.log(this.state.searchResults);  
 
-              this.setState({siteLat0: this.state.searchResults[0].lat})
-              this.setState({siteLng0: this.state.searchResults[0].lng})
+              this.setState({siteLat0: filteredResults[0].lat})
+              console.log(this.state.siteLat0);
+              this.setState({siteLng0: filteredResults[0].lng})
 
-              this.setState({siteLat1: this.state.searchResults[1].lat})
-              this.setState({siteLng1: this.state.searchResults[1].lng})
+              this.setState({siteLat1: filteredResults[1].lat})
+              this.setState({siteLng1: filteredResults[1].lng})
 
-              this.setState({siteLat2: this.state.searchResults[2].lat})
-              this.setState({siteLng2: this.state.searchResults[2].lng})
+              this.setState({siteLat2: filteredResults[2].lat})
+              this.setState({siteLng2: filteredResults[2].lng})
 
-              this.setState({siteLat3: this.state.searchResults[3].lat})
-              this.setState({siteLng3: this.state.searchResults[3].lng})
+              this.setState({siteLat3: filteredResults[3].lat})
+              this.setState({siteLng3: filteredResults[3].lng})
 
-              this.setState({siteLat4: this.state.searchResults[4].lat})
-              this.setState({siteLng4: this.state.searchResults[4].lng})
+              this.setState({siteLat4: filteredResults[4].lat})
+              this.setState({siteLng4: filteredResults[4].lng})
               
           }
           ))
     });
     
     async componentDidMount() {
-      //await navigator.geolocation.getCurrentPosition(
-      //    position => this.setState({ 
-      //        latitude: position.coords.latitude, 
-      //        longitude: position.coords.longitude
-      //    })
-      //)
-      const coordinates = await Geolocation.getCurrentPosition();
-      this.setState({ 
-               latitude: coordinates.coords.latitude, 
-                longitude: coordinates.coords.longitude
-            })
+      await navigator.geolocation.getCurrentPosition(
+          position => this.setState({ 
+              latitude: position.coords.latitude, 
+              longitude: position.coords.longitude
+          })
+      )
   }
 
 
@@ -166,9 +197,14 @@ class Tab1 extends Component  {
       render(){
 
       //const { constraints, mapsLoaded, singaporeLatLng, markers, searchResults } = this.state;
-      const { markers, geoCoderService,searchResults } = this.state; // Google Maps Services
+      const { markers, geoCoderService,searchResults,latitude,longitude } = this.state; // Google Maps Services
       return(
               <IonPage>
+                <IonHeader>
+                    <IonToolbar>
+                        <IonTitle>Testing Site Search</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
 
                       {/* 
               <IonHeader>
@@ -179,8 +215,7 @@ class Tab1 extends Component  {
                         */}
 
               <IonContent>
-              <div>Current Location: {JSON.stringify(this.state.latitude  )} ,  {JSON.stringify(this.state.longitude )}</div> 
-              <div>Initial Location: {JSON.stringify(this.state.latitude )} ,  {JSON.stringify(this.state.longitude)}</div>               
+              <div>Current Location: {JSON.stringify(latitude  )} ,  {JSON.stringify(longitude )}</div>           
 {/*************** Maps Section ******************************************************************************/}              
             <div className="google-map">
             <GoogleMapReact
@@ -189,22 +224,24 @@ class Tab1 extends Component  {
                 libraries: ['places', 'directions']
               }}
               defaultZoom={12}
-              defaultCenter={{ lat: 38, lng: -118 }}
-              center={{ lat: this.state.latitude, lng: this.state.longitude }}
+              //defaultCenter={{ lat: 38, lng: -118 }}
+              center={{ lat: latitude, lng: longitude }}
               yesIWantToUseGoogleMapApiInternals={true}
               yesIWantToUseGoogleMapApiInternals
               onGoogleApiLoaded={({ map, maps }) => this.apiHasLoaded(map, maps)} // "maps" is the mapApi. Bad naming but that's their library.
 
             >
-
+              
+              
              <Marker lat={this.state.latitude} lng={this.state.longitude} name="My Marker" color="blue"/>
+             
              <SimpleMarker lat={this.state.siteLat0} lng={this.state.siteLng0} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat1} lng={this.state.siteLng1} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat2} lng={this.state.siteLng2} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat3} lng={this.state.siteLng3} name="My Marker" color="red"/>
              <SimpleMarker lat={this.state.siteLat4} lng={this.state.siteLng4} name="My Marker" color="red"/>
-
-
+             
+             
 
                </GoogleMapReact>
                </div>
@@ -217,18 +254,7 @@ class Tab1 extends Component  {
 {/*************** Result Section ******************************************************************************/}
             {searchResults.length > 0 ? 
                <>
-
-        <section className="col-12">
-        <div className="d-flex flex-column justify-content-center">
-
-                <h1 className="mb-4 fw-md">Testing Center Nearby</h1>
-
-                   <div className="d-flex flex-wrap">
-                      {searchResults.map((result, key) => (<PlaceCard info={result} key={key} />))}
-                  </div>
-
-        </div>                        
-        </section>               
+               {searchResults}             
                </>
                : null}
 

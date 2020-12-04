@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rate, Divider } from 'antd';
+//import { Rate, Divider } from 'antd';
 
 // TODO: info is bad naming.
 const PlaceCard = (({ info, key }) => {

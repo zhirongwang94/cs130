@@ -1,50 +1,51 @@
-import React,  { Component } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import './map.css'
+
+//import { Icon } from '@iconify/react'
+//import locationIcon from '@iconify/icons-mdi/map-marker'
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton} from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
+import './Tab1.css';
+import {useHistory} from 'react-router-dom'
+import {useForm} from 'react-hook-form'
+import { Geolocation, Geoposition } from '@ionic-native/geolocation';
+import {  IonLoading, IonToast } from '@ionic/react';
+import React,  { Component, useState  } from 'react';
 
-import GoogleMapReact from 'google-map-react';
 
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-/**
-Find an API that can easily import a COVID news feed
 
-This page should contain:
-  -a news feed
-**/
+interface MyProps {
 
-const TestingSite: React.FC = () => {
+}
 
-  const MapWithAMarker = withGoogleMap(props =>
-    <GoogleMap
-      defaultZoom={8}
-      defaultCenter={{ lat: -34.397, lng: 150.644 }}
-    >
-      <Marker
-        position={{ lat: -34.397, lng: 150.644 }}
-      />
-    </GoogleMap>
-  );
-  return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Tab 2</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Tab 2</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer name=" Testing Site page" />
-        <MapWithAMarker
-  containerElement={<div style={{ height: `400px` }} />}
-  mapElement={<div style={{ height: `100%` }} />}
-/>
-      </IonContent>
-    </IonPage>
-  );
-};
+interface MyState {
+      brand: string,
+      model: string,
+      color: string,
+      year: string
+}
+class Car extends React.Component<MyProps, MyState> {
+  constructor(props:any) {
+    super(props);
+    this.state = {
+      brand: "Ford",
+      model: "Mustang",
+      color: "red",
+      year: "1964"
+    };
+  }
+  render() {
+    return (
+      <div>
+        <h1>My {this.state.brand}</h1>
+        <p>
+          It is a {this.state.color}
+          {this.state.model}
+          from {this.state.year}.
+        </p>
+      </div>
+    );
+  }
+}
 
-export default TestingSite;
+export default Car;
