@@ -91,7 +91,16 @@ class Tab1 extends Component  {
           directionService: new mapsApi.DirectionsService(),
         });
     });
-    
+    /**
+     * call to testing site search. It contained the main logic ofform a placesearch request 
+     * with current position and use Google.textsearch to getall place information 
+     * saved in searchResults. And render the searchResults for visualization.
+     * @remarks
+     * Call method after push the search bottom.
+     * @param {float} location.latitude - latitude value in degrees
+     * @param {float} location.longitude - longitude value in degrees
+     * @returns {Array} searchResults - top 5 testing location information
+     */
     handleSearch = (() => {
       if (this.state.map === {}){
         return
@@ -191,7 +200,11 @@ class Tab1 extends Component  {
           }
           ))
     });
-    
+    /**
+     * Asyncronous call to request device permissions for Local current location and saved in state
+     * @remarks
+     * Call method when generating the scripts.
+     */
     async componentDidMount() {
       await navigator.geolocation.getCurrentPosition(
           position => {this.setState({ 

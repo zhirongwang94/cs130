@@ -1,7 +1,13 @@
 
 import React from 'react';
 import './Marker.css';
-
+/**
+     * call to show the latitiude and longitude on the map with marker
+     * @remarks
+     * Call method after push the search bottom.
+     * @param {float} location.latitude - latitude value in degrees
+     * @param {float} location.longitude - longitude value in degrees
+     */
 const Marker = (props: any) => {
     const { color, name, id } = props;
     return (
