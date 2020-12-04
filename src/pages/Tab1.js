@@ -47,8 +47,8 @@ class Tab1 extends Component  {
         super(props);
         this.state = {
             mapsLoaded: false,     
-            latitude:40.771919,
-            longitude:-73.746971,
+            latitude:34,
+            longitude:-118,
             map: {},
             mapsApi: {},
             markers: [],
