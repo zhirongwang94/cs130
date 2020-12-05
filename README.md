@@ -17,7 +17,7 @@ Installs:
 
 
 Run for Backend:
- * Dependencies::
+ * Dependencies:
     flask, flask-cors, pandas
- * Run command at the back::
+ * Run command at the back:
     Python3 Handler.py
