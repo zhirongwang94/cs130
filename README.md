@@ -2,8 +2,8 @@
 This is for the cs130 group project, covid away app. 
 
 Language:
-  *typeScript
-  *Python
+  * typeScript
+  * Python
   
 To Open App:
   ```ionic serve```
