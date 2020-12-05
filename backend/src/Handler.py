@@ -1,38 +1,30 @@
-from abc import ABCMeta, abstractmethod
+"""
+The backend for Project Covid Away.
+-----------------------------------
+
+Built with Python Flask and communicate with App via RESTful API.
+
+*How To Use This:*
+ - Based on Python3
+ - Dependencies::
+    flask, flask-cors, pandas
+ - Run command at the back::
+    Python3 Handler.py
+
+"""
+
 import requests
-from flask import Flask, Response, request, abort, jsonify, g
+from flask import Flask, request
 from flask_cors import CORS
 import datetime
 import pandas as pd
 import json
 
 
-class Handler(metaclass=ABCMeta):
-    @abstractmethod
-    def read(self, json_message):
-        pass
-
-    def send(self):
-        pass
-
-
-class NewsFeedHandler(Handler):
-    def read(self, json_message):
-        pass
-    
-    def send(self):
-        pass
-
-
-class CaseDataHandler(Handler):
-    def read(self, json_message):
-        pass
-    
-    def send(self):
-        pass
-
-
 class Manager:
+    """
+    Store, update, and parse the cases data given the location
+    """
     url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/live/us-counties.csv"
     filename = 'data.csv'
     data = None
@@ -41,6 +33,10 @@ class Manager:
 
     @staticmethod
     def get_instance():
+        """
+        Returns:
+            instance for the singleton class Manager
+        """
         if Manager.__instance is None:
             Manager()
         return Manager.__instance
@@ -52,6 +48,12 @@ class Manager:
             Manager.__instance = self
 
     def get_data(self, loc):
+        """
+        Args:
+            loc: the target US county name
+        Returns:
+            up-to-date cases and deaths data of the given loc in json format
+        """
         cur = self.data[self.data["county"] == loc].values.tolist()[0][4:6]
         cases = {}
         cases["cases"] = int(cur[0])
@@ -60,6 +62,9 @@ class Manager:
         return json_object
 
     def update_dataset_if_needed(self):
+        """
+        Returns: Update the whole case data file if it is not latest
+        """
         if self.last_update_time is not None:
             cur_date = datetime.datetime.now().strftime("%d%m%y")
             if cur_date == self.last_update_time:
@@ -74,14 +79,19 @@ class Manager:
         self.data = pd.read_csv(self.filename)
 
 
-manager = Manager.get_instance()
-app = Flask("Geno")
+app = Flask("Covid_Away")
 CORS(app)
 
 
 @app.route('/feed/refresh', methods=['GET'])
 def refresh():
+    """
+    listen to endpoint '/feed/refresh',
+    Returns:
+        Up-to-date case data
+    """
     loc = request.args['loc']
+    manager = Manager.get_instance()
     manager.update_dataset_if_needed()
     return manager.get_data(loc)
 

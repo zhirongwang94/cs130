@@ -1,0 +1,43 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter D
+  \item \spxentry{data}\spxextra{Handler.Manager attribute}, \hyperpage{1}
+
+  \indexspace
+  \bigletter F
+  \item \spxentry{filename}\spxextra{Handler.Manager attribute}, \hyperpage{1}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{get\_data()}\spxextra{Handler.Manager method}, \hyperpage{1}
+  \item \spxentry{get\_instance()}\spxextra{Handler.Manager static method}, \hyperpage{1}
+
+  \indexspace
+  \bigletter H
+  \item \spxentry{Handler}
+    \subitem \spxentry{module}, \hyperpage{1}
+
+  \indexspace
+  \bigletter L
+  \item \spxentry{last\_update\_time}\spxextra{Handler.Manager attribute}, \hyperpage{1}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{Manager}\spxextra{class in Handler}, \hyperpage{1}
+  \item \spxentry{module}
+    \subitem \spxentry{Handler}, \hyperpage{1}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{refresh()}\spxextra{in module Handler}, \hyperpage{1}
+
+  \indexspace
+  \bigletter U
+  \item \spxentry{update\_dataset\_if\_needed()}\spxextra{Handler.Manager method}, \hyperpage{1}
+  \item \spxentry{url}\spxextra{Handler.Manager attribute}, \hyperpage{1}
+
+\end{sphinxtheindex}

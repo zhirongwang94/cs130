@@ -2,10 +2,11 @@
 This is for the cs130 group project, covid away app. 
 
 Language:
-  -TypeScript
+  * typeScript
+  * Python
   
 To Open App:
-  -ionic serve
+  ```ionic serve```
 
 Documentation on Ionic React:
   https://ionicframework.com/getting-started
@@ -13,3 +14,10 @@ Documentation on Ionic React:
 Installs:
   npm install react-hook-form --save
   npm install firebase --save
+
+
+Run for Backend:
+ * Dependencies:
+    flask, flask-cors, pandas
+ * Run command at the back:
+    ```Python3 Handler.py```
