@@ -1,0 +1,11 @@
+\indexentry{module@\spxentry{module}!Handler@\spxentry{Handler}|hyperpage}{1}
+\indexentry{Handler@\spxentry{Handler}!module@\spxentry{module}|hyperpage}{1}
+\indexentry{Manager (class in Handler)@\spxentry{Manager}\spxextra{class in Handler}|hyperpage}{1}
+\indexentry{data (Handler.Manager attribute)@\spxentry{data}\spxextra{Handler.Manager attribute}|hyperpage}{1}
+\indexentry{filename (Handler.Manager attribute)@\spxentry{filename}\spxextra{Handler.Manager attribute}|hyperpage}{1}
+\indexentry{get\_data() (Handler.Manager method)@\spxentry{get\_data()}\spxextra{Handler.Manager method}|hyperpage}{1}
+\indexentry{get\_instance() (Handler.Manager static method)@\spxentry{get\_instance()}\spxextra{Handler.Manager static method}|hyperpage}{1}
+\indexentry{last\_update\_time (Handler.Manager attribute)@\spxentry{last\_update\_time}\spxextra{Handler.Manager attribute}|hyperpage}{1}
+\indexentry{update\_dataset\_if\_needed() (Handler.Manager method)@\spxentry{update\_dataset\_if\_needed()}\spxextra{Handler.Manager method}|hyperpage}{1}
+\indexentry{url (Handler.Manager attribute)@\spxentry{url}\spxextra{Handler.Manager attribute}|hyperpage}{1}
+\indexentry{refresh() (in module Handler)@\spxentry{refresh()}\spxextra{in module Handler}|hyperpage}{1}
