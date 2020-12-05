@@ -143,6 +143,7 @@ class newsFeed extends React.Component<{}, { Posts: string}>{
     }
 
     /**
+     * @remarks
      * Render the page method
      */
     render() {
