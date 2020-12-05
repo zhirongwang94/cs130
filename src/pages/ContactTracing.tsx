@@ -83,10 +83,6 @@ class ContactTracing {
     }
   }
   
-  //Method called by button GUI
-  //Constructs message and calls async function to launch share functionality
-  //Void input
-  //Void output
   /**
    * Called on Tab 3 'Share' button press.
    * @remarks
