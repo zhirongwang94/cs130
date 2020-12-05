@@ -2,7 +2,7 @@
 This is for the cs130 group project, covid away app. 
 
 Language:
-  *ypeScript
+  *typeScript
   *Python
   
 To Open App:
