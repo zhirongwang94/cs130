@@ -86,8 +86,8 @@ const CreateUser: React.FC = () => {
               name="pass2"
               ref={register}
             />
-          <IonButton justify-content='center' color="black" size='large' type="submit">Create Account</IonButton>
-          <IonButton color="black" size="large" onClick={goBack}>Back</IonButton>
+          <IonButton justify-content='center' expand="block" shape="round"  color="primary" fill="solid" type="submit">Create Account</IonButton>
+          <IonButton expand="block" shape="round"  color="dark" fill="solid" onClick={goBack}>Back</IonButton>
           </form>
       </IonContent>
     </IonPage>
