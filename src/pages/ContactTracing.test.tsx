@@ -1,8 +1,8 @@
-import Singleton from '../src/pages/ContactTracing';
 
-//This is the test suite for ContactTracing object
 
+import Singleton from './ContactTracing';
 const ct = Singleton.getInstance();
+
 
 describe('checkSymptom(i:number)', () => {
     const sList = [
@@ -18,52 +18,38 @@ describe('checkSymptom(i:number)', () => {
         {val: "Nausea or vomiting", isChecked: false},
         {val: "Diarrhea", isChecked: false}
       ];
+    
+
 
     it('updates boolean to save checkbox state', () => {
-        expect(
-            ()=>{
-                {ct.checkSymptom(-1);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(sList);
+        ct.checkSymptom(-1);
+        expect(ct.getSymptomsList()).toEqual(sList);
+    
 
         sList[0].isChecked = !sList[0].isChecked;
-        expect(
-            ()=>{
-                {ct.checkSymptom(0);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(sList);
+        ct.checkSymptom(0);
+        expect(ct.getSymptomsList()).toEqual(sList);
+        ct.checkSymptom(0);
         sList[0].isChecked = false;
 
         sList[3].isChecked = !sList[3].isChecked;
-        expect(
-            ()=>{
-                {ct.checkSymptom(3);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(sList);
+        ct.checkSymptom(3);
+        expect(ct.getSymptomsList()).toEqual(sList);
+        ct.checkSymptom(3);
         sList[3].isChecked = false;
 
+
         sList[sList.length-1].isChecked = !sList[sList.length-1].isChecked;
-        expect(
-            ()=>{
-                {ct.checkSymptom(sList.length-1);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(sList);
+        ct.checkSymptom(sList.length-1);
+        expect(ct.getSymptomsList()).toEqual(sList);
+        ct.checkSymptom(sList.length-1);
         sList[sList.length-1].isChecked = false;
 
+        ct.checkSymptom(sList.length);
+        expect(ct.getSymptomsList()).toEqual(sList);
 
-        expect(
-            ()=>{
-                {ct.checkSymptom(sList.length);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(sList);
-       
     });
-    
+
 });
 
 describe('checkEmergency(i:number)', () => {
@@ -76,47 +62,29 @@ describe('checkEmergency(i:number)', () => {
       ];
 
       it('updates boolean to save checkbox state', () => {
-        expect(
-            ()=>{
-                {ct.checkEmergency(-1);}
-                ct.getEmergencyList();
-            }
-        ).toEqual(eList);
+        ct.checkEmergency(-1);
+        expect(ct.getEmergencyList()).toEqual(eList);
 
         eList[0].isChecked = !eList[0].isChecked;
-        expect(
-            ()=>{
-                {ct.checkSymptom(0);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(eList);
+        ct.checkEmergency(0);
+        expect(ct.getEmergencyList()).toEqual(eList);
+        ct.checkEmergency(0);
         eList[0].isChecked = false;
 
         eList[2].isChecked = !eList[2].isChecked;
-        expect(
-            ()=>{
-                {ct.checkSymptom(3);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(eList);
+        ct.checkEmergency(2);
+        expect(ct.getEmergencyList()).toEqual(eList);
+        ct.checkEmergency(2);
         eList[2].isChecked = false;
 
         eList[eList.length-1].isChecked = !eList[eList.length-1].isChecked;
-        expect(
-            ()=>{
-                {ct.checkSymptom(eList.length-1);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(eList);
+        ct.checkEmergency(eList.length-1);
+        expect(ct.getEmergencyList()).toEqual(eList);
+        ct.checkEmergency(eList.length-1);
         eList[eList.length-1].isChecked = false;
 
-
-        expect(
-            ()=>{
-                {ct.checkSymptom(eList.length);}
-                ct.getSymptomsList();
-            }
-        ).toEqual(eList);
+        ct.checkEmergency(eList.length);
+        expect(ct.getEmergencyList()).toEqual(eList);
        
     });
     
